@@ -1,0 +1,24 @@
+RODAR BACK/FRONT E TESTS 
+
+cd api
+./mvnw spring-boot:run
+
+
+
+cd client
+npm test
+
+cd client
+npm run dev
+- mostrar resultado mais facil: npm test -- --verbose 2>&1 | grep -E "×|✓" | head -20
+
+
+cd tests 
+# Todos os testes
+npm test
+
+# Só os E2E
+npm run test:e2e
+
+# Só os de API (não precisa do frontend)
+npm run test:api
