@@ -1,21 +1,3 @@
-/**
- * ARQUIVO: utils.test.ts
- * TIPO: Testes Unitários de Funções Puras (Jest puro, sem renderização)
- *
- * O que são testes de funções puras?
- * São testes que verificam funções que recebem uma entrada e retornam uma saída,
- * sem depender de componentes visuais, banco de dados ou API.
- *
- * Arquivos testados:
- * - utils/password.ts → funções de validação de senha
- * - utils/email.ts    → funções de validação de email
- *
- * BUG ENCONTRADO (capturado pelo teste marcado com [BUG]):
- * isPasswordValid() usa `password.length <= 8` em vez de `< 8`.
- * Isso faz com que senhas com EXATAMENTE 8 caracteres sejam rejeitadas,
- * contrariando o requisito que diz "mínimo 8 caracteres".
- */
- 
 // Importa as funções de validação de senha que serão testadas
 import { isPasswordValid, getPasswordValidationMessage } from "@/utils/password";
  
@@ -31,7 +13,6 @@ describe("isPasswordValid", () => {
  
   // Testa o caso feliz: senha com todos os critérios atendidos
   test("[SUCESSO] retorna true para senha forte com mais de 8 chars", () => {
-    // "Senha@1234" tem maiúscula, minúscula, número, especial e mais de 8 chars
     expect(isPasswordValid("Senha@1234")).toBe(true); // espera que retorne true
   });
  
@@ -64,21 +45,7 @@ describe("isPasswordValid", () => {
   // TESTE DE BUG — Este teste FALHA propositalmente, provando o bug
   // -------------------------------------------------------------------------
   test("[BUG] retorna true para senha com EXATAMENTE 8 chars válidos — FALHA ESPERADA", () => {
-    /**
-     * COMO IDENTIFIQUEI ESSE BUG:
-     * Ao tentar cadastrar com uma senha de exatamente 8 caracteres válidos,
-     * o sistema rejeitava a senha como inválida.
-     *
-     * CAUSA DO BUG (em utils/password.ts):
-     * O código usa:   if (!password || password.length <= 8)  → rejeita 8 chars
-     * Deveria usar:   if (!password || password.length < 8)   → aceita 8 chars
-     *
-     * REQUISITO: "mínimo 8 caracteres" → senha com 8 chars DEVE ser válida
-     *
-     * "Ab@1cdef" tem exatamente 8 chars, maiúscula, minúscula, número e especial.
-     * Deveria retornar true, mas retorna false por causa do bug acima.
-     */
-    expect(isPasswordValid("Ab@1cdef")).toBe(true); // FALHA: o código retorna false
+     expect(isPasswordValid("Ab@1cdef")).toBe(true); // FALHA: o código retorna false
   });
 });
  

@@ -247,21 +247,7 @@ describe("Tela de Cadastro - SignUp (integração)", () => {
   // TESTE DE BUG 1 — Falha propositalmente para provar o bug do localStorage
   // ---------------------------------------------------------------------------
   test("[BUG] getUser() deve recuperar o usuário salvo por saveUser() — FALHA ESPERADA", () => {
-    /**
-     * COMO IDENTIFIQUEI ESSE BUG:
-     * Após fazer login ou cadastro, ao recarregar a página o usuário estava deslogado.
-     * Investigando o código, encontramos a inconsistência nas chaves do localStorage.
-     *
-     * CAUSA DO BUG (em lib/localStorage.ts):
-     *   saveUser() → localStorage.setItem("user", ...)         ← grava com "user"
-     *   getUser()  → localStorage.getItem("sqa_social_user")   ← lê com "sqa_social_user"
-     *
-     * Como as chaves são diferentes, getUser() nunca encontra o que saveUser() gravou,
-     * retornando null sempre — fazendo o usuário parecer deslogado após recarregar.
-     *
-     * CORREÇÃO: trocar "user" por USER_KEY (= "sqa_social_user") no saveUser().
-     */
-    const usuario = { id: 1, email: "teste@email.com" };
+   const usuario = { id: 1, email: "teste@email.com" };
 
     saveUser(usuario);          // grava com chave "user"
     const recuperado = getUser(); // tenta ler com chave "sqa_social_user" → retorna null
@@ -316,22 +302,7 @@ describe("Tela de Reset de Senha (integração)", () => {
   // TESTE DE BUG 2 — Falha propositalmente para provar o bug da mensagem
   // ---------------------------------------------------------------------------
   test("[BUG] mensagem de sucesso deve ser exatamente 'E-mail enviado com sucesso' — FALHA ESPERADA", async () => {
-    /**
-     * COMO IDENTIFIQUEI ESSE BUG:
-     * Testando a tela de reset de senha com um email válido,
-     * a mensagem exibida era diferente do que o requisito especifica.
-     *
-     * CAUSA DO BUG (em app/reset-password/page.tsx):
-     *   Código atual:  "Email enviado com sucesso para alterar a senha! Redirecionando..."
-     *   Requisito:     "E-mail enviado com sucesso"
-     *
-     * Além do texto diferente, o requisito pede um TOAST (notificação visual),
-     * mas o código exibe uma div simples na página.
-     *
-     * CORREÇÃO: alterar a mensagem para "E-mail enviado com sucesso".
-     */
-
-    // Simula a API retornando sucesso
+   // Simula a API retornando sucesso
     (authService.resetPassword as jest.Mock).mockResolvedValue({});
 
     render(<ResetPassword />);

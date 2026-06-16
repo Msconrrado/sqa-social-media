@@ -20,5 +20,7 @@ npm test
 # Só os E2E
 npm run test:e2e
 
-# Só os de API (não precisa do frontend)
+# Só os de API 
 npm run test:api
+
+npm run test:api -- -g "API - POST /auth/reset-password com email inexistente deve retornar 404 e 'Usuário não encontrado'"
