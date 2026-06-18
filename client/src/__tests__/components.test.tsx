@@ -167,4 +167,31 @@ describe("PostCard", () => {
     // Verifica se onLike foi chamada com o id correto do post (1)
     expect(onLike).toHaveBeenCalledWith(1);
   });
+
+  // ===========================================================================
+  // FEATURE NOVA — exibição de likes e dislikes (Atividade 6)
+  // ===========================================================================
+
+  // Verifica se o card exibe a contagem de likes e dislikes do objeto reactions
+  test("[FEATURE] exibe número de likes e dislikes do objeto reactions", () => {
+    const postComReactions = {
+      ...mockPost,
+      reactions: { likes: 42, dislikes: 7 },
+    };
+
+    render(<PostCard post={postComReactions} isAuthenticated={false} onLike={jest.fn()} />);
+
+    // Verifica se os números aparecem na tela
+    expect(screen.getByText(/42/)).toBeInTheDocument();
+    expect(screen.getByText(/7/)).toBeInTheDocument();
+  });
+
+  // Verifica o fallback: sem reactions, deve exibir 0 em vez de quebrar
+  test("[FEATURE] exibe 0 quando o post não tem reactions", () => {
+    render(<PostCard post={mockPost} isAuthenticated={false} onLike={jest.fn()} />);
+
+    // mockPost não tem reactions, então likes e dislikes devem ser 0
+    const zeros = screen.getAllByText(/0/);
+    expect(zeros.length).toBeGreaterThanOrEqual(2);
+  });
 });
