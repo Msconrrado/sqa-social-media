@@ -161,14 +161,18 @@ jobs:
 
       - name: Instalar dependências dos testes
         working-directory: ./tests
-        run: npm install
+        # Instala o Playwright explicitamente para garantir o binário disponível
+        run: |
+          npm install
+          npm install -D @playwright/test
 
       - name: Instalar navegador Chromium do Playwright
         working-directory: ./tests
-        run: npx playwright install chromium
+        # Chama o binário direto do node_modules para evitar erro de permissão
+        run: node node_modules/@playwright/test/cli.js install --with-deps chromium
 
       - name: Rodar testes E2E e de API
         working-directory: ./tests
         # O teste de bug do email duplicado falha de propósito,
         # então "|| true" garante que a esteira não quebre por causa dele.
-        run: npm test || true
+        run: node node_modules/@playwright/test/cli.js test || true
