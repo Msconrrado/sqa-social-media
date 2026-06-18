@@ -165,7 +165,9 @@ jobs:
 
       - name: Instalar navegador Chromium do Playwright
         working-directory: ./tests
-        run: npx playwright install chromium
+        # npx -y garante que o playwright seja resolvido corretamente;
+        # --with-deps instala também as dependências de sistema do navegador
+        run: npx -y playwright install --with-deps chromium
 
       - name: Rodar testes E2E e de API
         working-directory: ./tests
